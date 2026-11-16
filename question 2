@@ -1,0 +1,75 @@
+#include <stdio.h>
+// 1. Bubble Sort (with early-exit flag)
+void bubble_sort(int a[], int n) {
+    int i, j, temp, swapped;
+    for (i = 0; i < n - 1; i++) {
+        swapped = 0; // Reset flag for this pass
+        for (j = 0; j < n - i - 1; j++) {
+            if (a[j] > a[j + 1]) {
+                // Swap elements
+                temp = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = temp;
+                swapped = 1; // A swap happened
+            }
+        }
+        // If no two elements were swapped, the array is already sorted
+        if (swapped == 0) break;
+    }
+}
+
+// 2. Selection Sort
+void selection_sort(int a[], int n) {
+    int i, j, min_idx, temp;
+    for (i = 0; i < n - 1; i++) {
+        min_idx = i;
+        for (j = i + 1; j < n; j++) {
+            if (a[j] < a[min_idx]) {
+                min_idx = j;
+            }
+        }
+        // Swap the found minimum element with the first element
+        temp = a[min_idx];
+        a[min_idx] = a[i];
+        a[i] = temp;
+    }
+}
+
+// 3. Insertion Sort
+void insertion_sort(int a[], int n) {
+    int i, key, j;
+    for (i = 1; i < n; i++) {
+        key = a[i];
+        j = i - 1;
+        // Move elements that are greater than key to one position ahead
+        while (j >= 0 && a[j] > key) {
+            a[j + 1] = a[j];
+            j = j - 1;
+        }
+        a[j + 1] = key;
+    }
+}
+
+// Helper function to print the array
+void print_array(int a[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", a[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int data[] = {64, 25, 12, 22, 11};
+    int n = 5;
+
+    printf("Original array: ");
+    print_array(data, n);
+
+    // Change this to selection_sort or insertion_sort to test others
+    bubble_sort(data, n);
+
+    printf("Sorted array:   ");
+    print_array(data, n);
+
+    return 0;
+}
