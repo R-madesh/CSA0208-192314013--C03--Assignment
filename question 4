@@ -1,0 +1,71 @@
+#include <stdio.h>
+int main() {
+    int rain[3][4] = {
+        {100, 120, 80, 50},
+        {200, 210, 190, 150},
+        {30, 40, 20, 10}
+    };
+
+    int rows = 3; // Change to 38 for assignment
+    int cols = 4; // Change to 12 for assignment
+
+    // 1. Annual Total per District (Row Totals)
+    printf("--- Annual Totals ---\n");
+    for (int i = 0; i < rows; i++) {
+        int row_sum = 0;
+        for (int j = 0; j < cols; j++) {
+            row_sum += rain[i][j];
+        }
+        printf("District %d: %d mm\n", i + 1, row_sum);
+    }
+
+    // 2. Monthly Average for the State (Column Averages)
+    printf("\n--- Monthly Averages ---\n");
+    for (int j = 0; j < cols; j++) {
+        float col_sum = 0;
+        for (int i = 0; i < rows; i++) {
+            col_sum += rain[i][j];
+        }
+        printf("Month %d: %.2f mm\n", j + 1, col_sum / rows);
+    }
+
+    // 3. Wettest District-Month (Find Max)
+    int max_val = -1;
+    int wet_dist = 0, wet_month = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (rain[i][j] > max_val) {
+                max_val = rain[i][j];
+                wet_dist = i;
+                wet_month = j;
+            }
+        }
+    }
+    printf("\nWettest: District %d, Month %d (%d mm)\n", wet_dist + 1, wet_month + 1, max_val);
+
+    // 4. Districts below 60% of State Average
+    // First, find the overall state average
+    float total_sum = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            total_sum += rain[i][j];
+        }
+    }
+    float state_avg = total_sum / (rows * cols);
+    float threshold = 0.6 * state_avg;
+
+    printf("\n--- Deficient Districts (Below %.2f mm) ---\n", threshold);
+    for (int i = 0; i < rows; i++) {
+        int district_sum = 0;
+        for (int j = 0; j < cols; j++) {
+            district_sum += rain[i][j];
+        }
+        float district_avg = (float)district_sum / cols;
+        
+        if (district_avg < threshold) {
+            printf("District %d\n", i + 1);
+        }
+    }
+
+    return 0;
+}
