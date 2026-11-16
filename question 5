@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <ctype.h>
+int word_count(const char s[])
+{
+    int count = 0;
+    int i = 0;
+    while (s[i] != '\0') {
+        if (s[i] != ' ' && (i == 0 || s[i-1] == ' ')) {
+            count++;
+        }
+        i++;
+    }
+
+    return count;
+}
+int is_palindrome(const char s[])
+{
+    int left = 0;
+    int right = 0;
+
+    // 1. Find the end of the string
+    while (s[right] != '\0') {
+        right++;
+    }
+    right--; // Move back to the last actual character
+
+    // 2. Compare from both ends
+    while (left < right) {
+        // If left is not a letter, just skip it
+        if (!isalpha(s[left])) {
+            left++;
+        } 
+        // If right is not a letter, just skip it
+        else if (!isalpha(s[right])) {
+            right--;
+        } 
+        // If both are letters, compare them
+        else {
+            if (tolower(s[left]) != tolower(s[right])) {
+                return 0; // Not a palindrome
+            }
+            left++;
+            right--;
+        }
+    }
+
+    return 1; // It is a palindrome
+}
+
+int main(void)
+{
+    printf("Words: %d\n", word_count(" Meet at the library at 5 PM "));
+    printf("%d %d\n", is_palindrome("Madam, I'm Adam"), is_palindrome("Hello"));
+    return 0;
+}
