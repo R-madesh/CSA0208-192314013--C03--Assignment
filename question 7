@@ -1,0 +1,65 @@
+#include <stdio.h>
+int main() {
+    // 1. Setup requirements
+    int num_candidates = 12;
+    int votes[] = {1, 2, 3, 4, 5, 1, 2, 1, 99, -1, 0, 6, 6, 6, 6}; // Sample data
+    int num_votes = 15; // Total number of entries in the votes array
+
+    // 2. Arrays needed
+    int counts[13] = {0}; // Index 1 to 12 for candidates, index 0 is unused
+    int valid_count = 0;
+    int invalid_count = 0;
+
+    // 3. Counting votes 
+    for (int i = 0; i < num_votes; i++) {
+        int v = votes[i];
+        if (v >= 1 && v <= num_candidates) {
+            counts[v]++;
+            valid_count++;
+        } else {
+            invalid_count++;
+        }
+    }
+
+    // 4. Sorting the results 
+    int ids[13];
+    for (int i = 1; i <= num_candidates; i++) {
+        ids[i] = i; 
+    }
+
+    for (int i = 1; i < num_candidates; i++) {
+        for (int j = 1; j <= num_candidates - i; j++) {
+            if (counts[j] < counts[j + 1]) {
+                // Swap counts
+                int temp_c = counts[j];
+                counts[j] = counts[j + 1];
+                counts[j + 1] = temp_c;
+
+                // Swap IDs so we don't lose track of who the votes belong to
+                int temp_id = ids[j];
+                ids[j] = ids[j + 1];
+                ids[j + 1] = temp_id;
+            }
+        }
+    }
+
+    // 5. Output Results
+    printf("Valid Votes: %d\n", valid_count);
+    printf("Invalid Votes: %d\n", invalid_count);
+    printf("\nRankings:\n");
+    for (int i = 1; i <= num_candidates; i++) {
+        printf("Candidate %d: %d votes\n", ids[i], counts[i]);
+    }
+
+    // 6. Winner and Tie detection
+    printf("\nResult: ");
+    if (counts[1] == counts[2] && counts[1] > 0) {
+        printf("It is a TIE between Candidate %d and %d\n", ids[1], ids[2]);
+    } else if (counts[1] > 0) {
+        printf("Winner is Candidate %d\n", ids[1]);
+    } else {
+        printf("No winner found.\n");
+    }
+
+    return 0;
+}
