@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_RESIDENTS 500
+#define MAX_NAME_LEN 30
+ 
+void remove_newline(char *s) {
+    size_t len = strlen(s);
+    if (len > 0 && s[len - 1] == '\n') {
+        s[len - 1] = '\0';
+    }
+}
+void sort_names(char names[][MAX_NAME_LEN], int n) {
+    char temp[MAX_NAME_LEN];
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            // strcmp returns > 0 if names[j] is alphabetically greater than names[j+1]
+            if (strcmp(names[j], names[j + 1]) > 0) {
+                strcpy(temp, names[j]);
+                strcpy(names[j], names[j + 1]);
+                strcpy(names[j + 1], temp);
+            }
+        }
+    }
+}
+
+// Function to perform Binary Search on sorted names
+int binary_search_names(char names[][MAX_NAME_LEN], int n, const char *target) {
+    int low = 0, high = n - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        int res = strcmp(names[mid], target);
+
+        if (res == 0) return mid; // Found
+        if (res < 0) low = mid + 1; // Target is in the right half
+        else high = mid - 1; // Target is in the left half
+    }
+    return -1; // Not found
+}
+
+int main() {
+    char names[MAX_RESIDENTS][MAX_NAME_LEN];
+    int n;
+
+    printf("the number of residents: ");
+    scanf("%d", &n);
+    getchar(); // Consume the newline left by scanf
+
+    printf("Enter %d names:\n", n);
+    for (int i = 0; i < n; i++) {
+        if (fgets(names[i], MAX_NAME_LEN, stdin)) {
+            remove_newline(names[i]);
+        }
+    }
+
+    // 1. Sort the names
+    sort_names(names, n);
+
+    printf("\n--- Sorted Resident Directory ---\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d. %s\n", i + 1, names[i]);
+    }
+
+    // 2. Search for a name
+    char search_name[MAX_NAME_LEN];
+    printf("\n a name to search for: ");
+    fgets(search_name, MAX_NAME_LEN, stdin);
+    remove_newline(search_name);
+
+    int index = binary_search_names(names, n, search_name);
+
+    if (index != -1) {
+        printf("Result: '%s' found at position %d in the sorted list.\n", search_name, index + 1);
+    } else {
+        printf("Result: '%s' not found in the directory.\n", search_name);
+    }
+
+    return 0;
+}
